@@ -17,6 +17,8 @@ public class VideoPlayer_Manager : MonoBehaviour
     public GameObject oyna_btn;
     void Start()
     {
+        Screen.orientation = ScreenOrientation.Portrait;
+
         videoOynatici = gameObject.GetComponent<VideoPlayer>() ? gameObject.GetComponent<VideoPlayer>() : gameObject.AddComponent<VideoPlayer>();
         videoOynatici.renderMode = VideoRenderMode.CameraFarPlane;
         videoOynatici.targetCamera = Camera.main;
