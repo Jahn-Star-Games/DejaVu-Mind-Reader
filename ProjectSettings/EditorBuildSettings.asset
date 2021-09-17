@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Sahne/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Sahne/Giris.unity
+    path: Assets/Scene/Game.unity
     guid: aa2d2dc3bdffb05458c2bcdcaefaec7e
   m_configObjects: {}
