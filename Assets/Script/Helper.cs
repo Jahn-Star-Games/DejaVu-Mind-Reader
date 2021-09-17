@@ -1,25 +1,29 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Helper : MonoBehaviour
 {
-    [Header("Helper Mode")]
+    [Header("GUI")]
     public Text equationTextSource;
     public Text equalsTextSource;
+    public ScrollRect doorsScrollRect;
     [Header("Panel Animation")]
     public Vector2 panelMinMax_Pos; // -183.6, 582
     public float animationDuration = 5;
     private float animTime, time_normalized;
     private RectTransform rectTransform;
     internal bool calculator = false, changeMode;
-    private string output;
-    private int process;
-    private float lastResult;
-
-    private void Start()
+    private string output, _firstNumber, _operator, _secondNumber;
+    private double _equals;
+    private static string split = ":";
+    internal float scroll, scrollTarget;
+    private RectTransform prevScrollButton;
+    private void OnEnable()
     {
         rectTransform = GetComponent<RectTransform>();
+        //
+        output = _firstNumber = _operator = _secondNumber = "";
+        _equals = 0;
     }
     void Update()
     {
@@ -37,65 +41,80 @@ public class Helper : MonoBehaviour
             rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition, new Vector2(0, panelMinMax_Pos.y), time_normalized);
             if (panelMinMax_Pos.y - rectTransform.anchoredPosition.y < 0.25f) changeMode = false;
         }
+        //
+        if (scroll != scrollTarget)
+        {
+            if (scroll > scrollTarget)
+            {
+                scroll -= Time.deltaTime * 1;
+                if (scroll < scrollTarget) scroll = scrollTarget;
+            }
+            else
+            {
+                scroll += Time.deltaTime * 0.75f;
+                if (scroll > scrollTarget) scroll = scrollTarget;
+            }
+            doorsScrollRect.normalizedPosition = new Vector2(0, scroll);
+        }
     }
-
-    internal void PressKey(string key)
-    {
-        float number;
-        if (float.TryParse(key, out number))
-        {
-            if (process == 1) process = 2;
-            output += number + "";
-        }
-        else if (key != ".")
-        {
-            string lastChar = "";
-            try { lastChar = output.Length > 0 ? output[output.Length - 1] + "" : ""; }
-            catch { }
-            if (key == "C")
-            {
-                output = "";
-                process = 0;
-                equalsTextSource.text = "";
-            }
-            else if (lastChar == "+" || lastChar == "-" || lastChar == "*" || lastChar == "/")
-            {
-                output = output.Remove(output.Length - 1);
-                process = 0;
-            }
-            if (output.Length > 0 && lastChar != key && process != 2)
-            {
-                output += key;
-                process = 1;
-            }
-            else if (process == 2)
-            {
-                output = lastResult + key;
-                process = 1;
-            }
-        }
-        else if (output.Length > 0 && output[output.Length - 1] != '.') output += ".";
-        if (process == 2)
-        {
-            try
-            {
-                if (output.Contains("+")) lastResult = float.Parse(output.Split('+')[0]) + float.Parse(output.Split('+')[1]);
-                else if (output.Contains("-")) lastResult = float.Parse(output.Split('-')[0]) - float.Parse(output.Split('-')[1]);
-                else if (output.Contains("*")) lastResult = float.Parse(output.Split('*')[0]) * float.Parse(output.Split('*')[1]);
-                else if (output.Contains("/")) lastResult = float.Parse(output.Split('/')[0]) / float.Parse(output.Split('/')[1]);
-            }
-            catch (FormatException) { output = output.Remove(output.Length - 1); }
-            catch { }
-            equalsTextSource.text = "= " + (int)lastResult;
-        }
-        else if (process == 0 && output.Split('.').Length > 2) output = output.Remove(output.Length - 1);
-        equationTextSource.text = output;
-    }
-
     public void HelperDisplay()
     {
         calculator = !calculator;
         changeMode = true;
         animTime = 0;
+    }
+    public void Scroll(RectTransform scrollButton)
+    {
+        if (scrollButton) prevScrollButton = scrollButton;
+        if (prevScrollButton) scrollButton.eulerAngles = new Vector3(scrollButton.eulerAngles.x, scrollButton.eulerAngles.y, scrollButton.eulerAngles.z + 180);
+        scroll = doorsScrollRect.normalizedPosition.y;
+        scrollTarget = scrollTarget == 0 ? 1 : 0;
+    }
+    // Calculator
+    public void PressKey(string character)
+    {
+        if (character == "C") output = ""; // clean
+        else if (char.IsDigit(character[0]) || character == ",") // is a digit
+        {
+            string first = "", second = "";
+            //
+            if (!output.Contains(split)) first = output;
+            else second = output.Split(split[0])[1];
+            //
+            string part = first + second;
+            if (character != "," || (!part.Contains(",") && part.Length > 0)) output += character;
+        }
+        else if (character == "<") output = output.Length > 0 ? output.Remove(output.Length - 1) : ""; // backspace
+        else if (!output.Contains(split))  // is a operator
+        {
+            _operator = character;
+            output += split;
+        }
+        else // new process
+        {
+            if (_secondNumber != "") _firstNumber = _equals.ToString();
+            _operator = character;
+            output = _firstNumber + split;
+        }
+        //
+        if (!output.Contains(split)) _firstNumber = output;
+        else _secondNumber = output.Split(split[0])[1];
+        _equals = Calculate(_firstNumber, _secondNumber, _operator);
+        //
+        equationTextSource.text = output.Replace(split, _operator);
+        equalsTextSource.text = _equals + "" == double.NaN + "" ? "" : "= " + _equals.ToString("0.###");
+    }
+    public static double Calculate(string firstNumber, string secondNumber, string op)
+    {
+        double n1, n2;
+        if (!double.TryParse(firstNumber, out n1) || !double.TryParse(secondNumber, out n2)) return double.NaN;
+        switch (op)
+        {
+            case "+": return n1 + n2;
+            case "-": return n1 - n2;
+            case "*": return n1 * n2;
+            case "/": return n2 != 0 ? n1 / n2 : double.NaN;
+            default: return double.NaN;
+        }
     }
 }

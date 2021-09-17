@@ -37,7 +37,6 @@ public class Game : MonoBehaviour
         currentStep = 0;
         gameHelper.PressKey("C");
     }
-
     void Update()
     {
         try
@@ -116,6 +115,9 @@ public class Game : MonoBehaviour
                     nextStepButton.SetActive(false);
                     gameHelper.changeMode = gameHelper.calculator = true;
                     gameResults.SetActive(true);
+                    //
+                    gameHelper.doorsScrollRect.normalizedPosition = new Vector2(0, 0);
+                    gameHelper.Scroll(null);
                 }
             }
         }
