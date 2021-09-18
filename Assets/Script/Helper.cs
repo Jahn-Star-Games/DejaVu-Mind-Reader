@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿
+//Developed by Halil Emre Yildiz - @Jahn_Star
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Helper : MonoBehaviour
@@ -17,7 +19,6 @@ public class Helper : MonoBehaviour
     private double _equals;
     private static string split = ":";
     internal float scroll, scrollTarget;
-    private RectTransform prevScrollButton;
     private void OnEnable()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -46,12 +47,12 @@ public class Helper : MonoBehaviour
         {
             if (scroll > scrollTarget)
             {
-                scroll -= Time.deltaTime * 1;
+                scroll -= Time.deltaTime * 0.8f;
                 if (scroll < scrollTarget) scroll = scrollTarget;
             }
             else
             {
-                scroll += Time.deltaTime * 0.75f;
+                scroll += Time.deltaTime * 0.4f;
                 if (scroll > scrollTarget) scroll = scrollTarget;
             }
             doorsScrollRect.normalizedPosition = new Vector2(0, scroll);
@@ -65,8 +66,7 @@ public class Helper : MonoBehaviour
     }
     public void Scroll(RectTransform scrollButton)
     {
-        if (scrollButton) prevScrollButton = scrollButton;
-        if (prevScrollButton) scrollButton.eulerAngles = new Vector3(scrollButton.eulerAngles.x, scrollButton.eulerAngles.y, scrollButton.eulerAngles.z + 180);
+        if (scrollButton) scrollButton.eulerAngles = new Vector3(scrollButton.eulerAngles.x, scrollButton.eulerAngles.y, scrollButton.eulerAngles.z + 180);
         scroll = doorsScrollRect.normalizedPosition.y;
         scrollTarget = scrollTarget == 0 ? 1 : 0;
     }

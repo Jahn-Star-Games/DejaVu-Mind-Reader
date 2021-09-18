@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿
+//Developed by Halil Emre Yildiz - @Jahn_Star
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class Game : MonoBehaviour
@@ -91,7 +93,7 @@ public class Game : MonoBehaviour
                     steps.Add(add + " ile topla...");
                     steps.Add(divide + " ile böl...");
                     steps.Add(subtract + " ile çıkar...");
-                    steps.Add("Sonuc tam sayı değilse tam sayıya yuvarla ve aynı numaralı kapıya tıkla.");
+                    steps.Add("Sonucun tam sayı ise aynı numaralı kapıyı aç, ve ilk tuttuğun sayı seni karşılayacak...");
 
                     stepsTextSource.text = steps[0];
                     CreateDoor();
@@ -108,6 +110,7 @@ public class Game : MonoBehaviour
             {
                 currentStep++;
                 stepsTextSource.text = steps[currentStep];
+                GameManager.TextAnimation(stepsTextSource, 1.5f);
                 nextStepButton.SetActive(true);
                 prevStepButon.SetActive(true);
                 if (currentStep + 1 >= steps.Count) 
@@ -125,6 +128,7 @@ public class Game : MonoBehaviour
         {
             currentStep--;
             stepsTextSource.text = steps[currentStep];
+            GameManager.TextAnimation(stepsTextSource, 1.5f);
             prevStepButon.SetActive(true);
             nextStepButton.SetActive(true);
 
@@ -133,6 +137,7 @@ public class Game : MonoBehaviour
     }
     public void CreateDoor()
     {
+        GameManager.TextAnimation(stepsTextSource, 0.75f);
         foreach (Transform door in doorsGrid) Destroy(door.gameObject);
         if (values.Count > 0)
             for (int i = 0; i < values.Count; i++)
