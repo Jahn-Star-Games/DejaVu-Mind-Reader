@@ -1,5 +1,4 @@
-﻿
-//Developed by Halil Emre Yildiz - @Jahn_Star
+﻿//Developed by Halil Emre Yildiz - @Jahn_Star
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
@@ -7,6 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(VideoPlayer)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(Image))]
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
     [Header("Background Video")]
     public VideoClip videoClip;
     public float playbackSpeed = 1f, endOffset = 1.25f;
@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
     private VideoPlayer videoPlayer;
     private AudioSource audioSource;
     [Header("GUI")]
-    public Text audioTextSource;
     public Text resultTextSource;
+    public Text stepsTextSource, audioTextSource;
     public GameObject[] settingPanel;
     [Header("Game 1")]
     public GameObject gameUI;
@@ -27,8 +27,9 @@ public class GameManager : MonoBehaviour
     private bool showResult;
     private static Text _textAnim;
     private static float _textAnim_time, _textAnim_speed;
-    private void Start()
+    private void Awake()
     {
+        if (!Instance) Instance = this;
         Screen.orientation = ScreenOrientation.Portrait;
         //
         videoPlayer = gameObject.GetComponent<VideoPlayer>() ? gameObject.GetComponent<VideoPlayer>() : gameObject.AddComponent<VideoPlayer>();
@@ -50,11 +51,19 @@ public class GameManager : MonoBehaviour
         //
         SettingsDisplay("false");
     }
-    public void Exit()
+    public void OpenURL(string url)
+    {
+        Application.OpenURL(url);
+    }
+    public void Restart()
     {
         playButton.SetActive(true);
         GetComponent<Image>().enabled = false;
         gameUI.SetActive(false);
+        stepsTextSource.text = "";
+        Color _color = stepsTextSource.color;
+        _color.a = 0;
+        stepsTextSource.color = _color;
     }
     public void Play()
     {
@@ -66,13 +75,18 @@ public class GameManager : MonoBehaviour
     {
         audioSource.mute = !audioSource.mute;
     }
+    int prevAudio = -1;
     public void ChangeAudio()
     {
-        audioSource.clip = audioClips[Random.Range(0, audioClips.Length)];
+        int currentAudio;
+        do { currentAudio = Random.Range(0, audioClips.Length); }
+        while (prevAudio == currentAudio);
+        prevAudio = currentAudio;
+        audioSource.clip = audioClips[currentAudio];
         audioTextSource.text = audioSource.clip.name;
         audioSource.Play();
     }
-    public void SettingsDisplay(string show_or_hide = "value")
+    public void SettingsDisplay(string show_or_hide)
     {
         if (show_or_hide == "true") foreach (GameObject button in settingPanel) button.SetActive(true);
         else if (show_or_hide == "false") foreach (GameObject button in settingPanel) button.SetActive(false);
@@ -86,7 +100,7 @@ public class GameManager : MonoBehaviour
         videoPlayer.playbackSpeed = _playbackSpeed;
         resultTextSource.text = yourNumber;
     }
-    public static void TextAnimation(Text textSource, float speed)
+    public static void TextAnimation(Text textSource, float speed = 1f)
     {
         if (_textAnim != textSource)
         {
@@ -109,7 +123,7 @@ public class GameManager : MonoBehaviour
                 videoPlayer.Stop();
                 videoPlayer.Play();
                 resultTextSource.text = "";
-                Exit();
+                Restart();
             }
             else if (videoPlayer.time >= 2.6f && !resultTextSource.gameObject.activeInHierarchy)
             {
@@ -126,7 +140,7 @@ public class GameManager : MonoBehaviour
         if (_textAnim)
         {
             Color temp_color = _textAnim.color;
-            temp_color.a = Mathf.Clamp(Mathf.Sin(_textAnim_time += Time.deltaTime * 1.5f), 0, 1);
+            temp_color.a = Mathf.Clamp(Mathf.Sin(_textAnim_time += Time.deltaTime * _textAnim_speed), 0, 1);
             _textAnim.color = temp_color;
             if (temp_color.a > 0.9f) _textAnim = null;
         }

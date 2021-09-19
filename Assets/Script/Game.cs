@@ -16,10 +16,10 @@ public class Game : MonoBehaviour
     public List<float> values;
     public List<string> steps;
     [Header("GUI")]
-    public Text stepsTextSource;
     public GameManager background;
     public Helper gameHelper;
     public GameObject gameResults, prevStepButon, nextStepButton;
+    private Text stepsTextSource;
     private int currentStep;
     private bool createDoors;
     private int multiply, add, divide, subtract, _redivide;
@@ -29,6 +29,7 @@ public class Game : MonoBehaviour
         gameResults.SetActive(false);
         prevStepButon.SetActive(false);
         nextStepButton.SetActive(true);
+        stepsTextSource = GameManager.Instance.stepsTextSource;
     }
     private void OnEnable()
     {
@@ -83,11 +84,11 @@ public class Game : MonoBehaviour
                 if (!notConsecutive) // add steps
                 {
                     steps.Clear();
-                    steps.Add("Merhaba, seninle bir oyun oynayacağız.");
+                    steps.Add("Merhaba, seninle bir oyun oynayacağız...");
                     steps.Add("Sana sihirli işlemler yaptırarak aklındaki sayıyı bulacağım.");
                     //steps.Add("İşlemleri aklından yada yukardaki mavi çubuğa tıklayarak hesap makinesinden yapabilirsin.");
                     steps.Add("Aklından " + (firstValue <= 1 ? 1 : firstValue) + " ile " + lastValue + " arasında bir sayı tut...");
-                    steps.Add("Kensi ile topla...");
+                    steps.Add("Kendisi ile topla...");
                     steps.Add(_redivide + " ile çarp...");
                     if ((_redivide * 2) / (multiply * 2) > 1) steps.Add((_redivide * 2) / (multiply * 2) + " ile böl..."); // (_redivide * 2) ile bol ve (multiply * 2) ile carp demek
                     steps.Add(add + " ile topla...");
@@ -137,7 +138,7 @@ public class Game : MonoBehaviour
     }
     public void CreateDoor()
     {
-        GameManager.TextAnimation(stepsTextSource, 0.75f);
+        GameManager.TextAnimation(stepsTextSource, 1f);
         foreach (Transform door in doorsGrid) Destroy(door.gameObject);
         if (values.Count > 0)
             for (int i = 0; i < values.Count; i++)
