@@ -2,21 +2,20 @@
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
-
-[RequireComponent(typeof(VideoPlayer)), RequireComponent(typeof(AudioSource)), RequireComponent(typeof(Image))]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public VideoPlayer videoPlayer;
+    public AudioSource audioSource;
     [Header("Background Video")]
     public VideoClip videoClip;
-    public float playbackSpeed = 1f, endOffset = 1.25f;
+    public VideoClip blurVideo;
+    public float endOffset = 1.25f;
     [Header("Result Video")]
     public VideoClip _videoClip;
-    public float _playbackSpeed = 1f, _endOffset = 1.25f;
-    [Space]
+    public float _endOffset = 1.25f;
+    [Header("Music")]
     public AudioClip[] audioClips;
-    private VideoPlayer videoPlayer;
-    private AudioSource audioSource;
     [Header("GUI")]
     public Text resultTextSource;
     public Text stepsTextSource, audioTextSource;
@@ -32,18 +31,6 @@ public class GameManager : MonoBehaviour
         if (!Instance) Instance = this;
         Screen.orientation = ScreenOrientation.Portrait;
         //
-        videoPlayer = gameObject.GetComponent<VideoPlayer>() ? gameObject.GetComponent<VideoPlayer>() : gameObject.AddComponent<VideoPlayer>();
-        videoPlayer.renderMode = VideoRenderMode.CameraFarPlane;
-        videoPlayer.targetCamera = Camera.main;
-        videoPlayer.aspectRatio = VideoAspectRatio.FitOutside;
-        videoPlayer.playOnAwake = videoPlayer.isLooping = true;
-        videoPlayer.waitForFirstFrame = videoPlayer.skipOnDrop = false;
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
-        videoPlayer.clip = videoClip ? videoClip : null;
-        videoPlayer.Play();
-        //
-        audioSource = gameObject.GetComponent<AudioSource>() ? gameObject.GetComponent<AudioSource>() : gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = audioSource.loop = true;
         ChangeAudio();
         //
         gameUI.SetActive(false);
@@ -57,8 +44,8 @@ public class GameManager : MonoBehaviour
     }
     public void Restart()
     {
-        playButton.SetActive(true);
         GetComponent<Image>().enabled = false;
+        playButton.SetActive(true);
         gameUI.SetActive(false);
         stepsTextSource.text = "";
         Color _color = stepsTextSource.color;
@@ -97,7 +84,6 @@ public class GameManager : MonoBehaviour
         showResult = true;
         gameUI.SetActive(false);
         videoPlayer.clip = _videoClip;
-        videoPlayer.playbackSpeed = _playbackSpeed;
         resultTextSource.text = yourNumber;
     }
     public static void TextAnimation(Text textSource, float speed = 1f)
@@ -119,7 +105,6 @@ public class GameManager : MonoBehaviour
                 resultTextSource.gameObject.SetActive(false);
                 gameUI.SetActive(true);
                 videoPlayer.clip = videoClip;
-                videoPlayer.playbackSpeed = playbackSpeed;
                 videoPlayer.Stop();
                 videoPlayer.Play();
                 resultTextSource.text = "";
