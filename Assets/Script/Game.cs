@@ -22,7 +22,7 @@ public class Game : MonoBehaviour
     public List<string> steps;
     private int currentStep;
     private bool createDoors;
-    private int multiply, add, divide, subtract, _redivide;
+    private int multiply, add, divide, subtract, _divideAndMultiply;
     private void Awake()
     {
         CreateDoor(doorsCount);
@@ -107,14 +107,14 @@ public class Game : MonoBehaviour
                     subtract = Random.Range(1, 75);
                     subtract += subtract % 2 != 0 ? 1 : 0;
 
-                    _redivide = Random.Range(1, 15);
-                    _redivide += _redivide % 2 != 0 ? 1 : 0;
+                    _divideAndMultiply = Random.Range(1, 15);
+                    _divideAndMultiply += _divideAndMultiply % 2 != 0 ? 1 : 0;
 
                     firstValue = (int)Reverse(0);
                     lastValue = (int)Reverse(doorsCount-1);
-                    test = (int)Reverse(((((lastValue * 2 * _redivide) / ((_redivide * 2) / (multiply * 2) > 1 ? (_redivide * 2) / (multiply * 2) : 1)) + add) / divide) - subtract);
+                    test = (int)Reverse(((((lastValue * 2 * _divideAndMultiply) / ((_divideAndMultiply * 2) / (multiply * 2) > 1 ? (_divideAndMultiply * 2) / (multiply * 2) : 1)) + add) / divide) - subtract);
                 }
-                while ((_redivide * 2) / (multiply * 2) == 0 || firstValue < 0 || lastValue > (doorsCount - 1) || divide < 1 || test != lastValue);
+                while ((_divideAndMultiply * 2) / (multiply * 2) == 0 || firstValue < 0 || lastValue > (doorsCount - 1) || divide < 1 || test != lastValue);
 
                 result = "";
                 values.Clear();
@@ -132,18 +132,18 @@ public class Game : MonoBehaviour
                 createDoors = notConsecutive;
                 if (!notConsecutive) // add steps
                 {
+                    string lang = background.lang;
                     steps.Clear();
-                    steps.Add("Merhaba, seninle bir oyun oynayacağız...");
-                    steps.Add("Sana sihirli işlemler yaptırarak aklındaki sayıyı bulacağım.");
-                    //steps.Add("İşlemleri aklından yada yukardaki mavi çubuğa tıklayarak hesap makinesinden yapabilirsin.");
-                    steps.Add("Aklından " + (firstValue <= 1 ? 1 : firstValue) + " ile " + lastValue + " arasında bir sayı tut...");
-                    steps.Add("Kendisi ile topla...");
-                    steps.Add(_redivide + " ile çarp...");
-                    if ((_redivide * 2) / (multiply * 2) > 1) steps.Add((_redivide * 2) / (multiply * 2) + " ile böl..."); // (_redivide * 2) ile bol ve (multiply * 2) ile carp demek
-                    steps.Add(add + " ile topla...");
-                    steps.Add(divide + " ile böl...");
-                    steps.Add(subtract + " ile çıkar...");
-                    steps.Add("Sonucun tam sayı ise aynı numaralı kapıyı aç, ve ilk tuttuğun sayı seni karşılayacak...");
+                    steps.Add(lang == "tr" ? "Hoş geldin,\nseninle bir oyun oynayacağız..." : "Welcome,\nlet's play a game...");
+                    steps.Add(lang == "tr" ? "Sana sihirli işlemler yaptırarak aklındaki sayıyı bulacağım." : "I will guess the number your thinking.");
+                    steps.Add(lang == "tr" ? "Aklından " + (firstValue <= 1 ? 1 : firstValue) + " ile " + lastValue + " arasında bir sayı tut..." : "Think of a number between " + (firstValue <= 1 ? 1 : firstValue) + " and " + lastValue);
+                    steps.Add(lang == "tr" ? "Kendisi ile topla..." : "Double it"); // Multiply by 2 - Add your number again
+                    steps.Add(lang == "tr" ? _divideAndMultiply + " ile çarp..." : "Multiply this number by " + _divideAndMultiply);
+                    if ((_divideAndMultiply * 2) / (multiply * 2) > 1) steps.Add(lang == "tr" ? (_divideAndMultiply * 2) / (multiply * 2) + " ile böl..." : "Divide by " + (_divideAndMultiply * 2) / (multiply * 2)); // (_redivide * 2) ile bol ve (multiply * 2) ile carp demek
+                    steps.Add(lang == "tr" ? add + " ekle..." : "Add " + add);
+                    steps.Add(lang == "tr" ? divide + " ile böl..." : "Divide it by " + divide);
+                    steps.Add(lang == "tr" ? subtract + " çıkar..." : "Subtract " + subtract + " from total");
+                    steps.Add(lang == "tr" ? "İlk tuttuğun sayıyı tahmin etmem için, çıkan sonuç ile aynı numaralı kapıyı aç..." : "Let me guess... Tap the door with the same number as this number...");
 
                     stepsTextSource.text = steps[0];
                 }

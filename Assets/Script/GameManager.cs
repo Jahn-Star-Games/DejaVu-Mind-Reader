@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
     public Text resultTextSource;
     public Text stepsTextSource, audioTextSource;
     public GameObject[] settingPanel;
+    [Space]
+    public Text _hint;
+    public Text _playButton, _doorsTitle;
+    public Button trButton;
+    public Button enButton;
+    internal string lang;
     public void Scroll(RectTransform scrollButton)
     {
         if (scrollButton) scrollButton.eulerAngles = new Vector3(scrollButton.eulerAngles.x, scrollButton.eulerAngles.y, scrollButton.eulerAngles.z + 180);
@@ -43,7 +49,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                scroll += Time.deltaTime * 0.5f;
+                scroll += Time.deltaTime * 0.75f;
                 if (scroll > scrollTarget) scroll = scrollTarget;
             }
             doorsScrollRect.normalizedPosition = new Vector2(0, scroll);
@@ -54,7 +60,10 @@ public class GameManager : MonoBehaviour
     {
         if (!Instance) Instance = this;
         videoPlayer.timeReference = VideoTimeReference.InternalTime;
+        videoPlayer.Play();
         Screen.orientation = ScreenOrientation.Portrait;
+        Screen.SetResolution(Screen.width, Screen.height, true, 60);
+        ChangeLanguage(Application.systemLanguage == SystemLanguage.Turkish ? "tr" : "en");
         //
         ChangeAudio();
         gameUI.SetActive(false);
@@ -62,9 +71,9 @@ public class GameManager : MonoBehaviour
         //
         SettingsDisplay("false");
     }
-    public void MuteAudio()
+    public void OpenURL(string url)
     {
-        audioSource.mute = !audioSource.mute;
+        Application.OpenURL(url);
     }
     public void ChangeAudio()
     {
@@ -75,6 +84,22 @@ public class GameManager : MonoBehaviour
         audioSource.clip = audioClips[currentAudio];
         audioTextSource.text = audioSource.clip.name;
         audioSource.Play();
+    }
+    public void MuteAudio()
+    {
+        audioSource.mute = !audioSource.mute;
+    }
+    public void ChangeLanguage(string language)
+    {
+        this.lang = language;
+        trButton.enabled = language == "tr" ? true : false;
+        trButton.image.enabled = trButton.enabled;
+        enButton.enabled = language == "tr" ? false : true;
+        enButton.image.enabled = enButton.enabled;
+        _hint.text = language == "tr" ? "Not: Hesap makinesini kullanmak zorunda değilsin. Sonraki adımı görmek için '>'a tıkla" : "Note: You can use the calculator if you want. Click '>' to see next step.";
+        _playButton.text = language == "tr" ? "OYNA" : "PLAY";
+        _doorsTitle.text = language == "tr" ? "Sihirli Kapılar" : "Magic Doors";
+        Restart();
     }
     public void SettingsDisplay(string show_or_hide)
     {
@@ -90,10 +115,6 @@ public class GameManager : MonoBehaviour
             _textAnim_speed = speed;
             _textAnim_time = 0;
         }
-    }
-    public void OpenURL(string url)
-    {
-        Application.OpenURL(url);
     }
     public void Restart()
     {
@@ -134,12 +155,13 @@ public class GameManager : MonoBehaviour
                 //
                 videoPlayer.clip = backgroundVideoClip;
                 videoPlayer.Play();
+                SettingsDisplay("true");
                 Restart();
             }
-            else if (videoPlayer.time >= 2.6f && !resultTextSource.gameObject.activeInHierarchy) 
+            else if (videoPlayer.time >= 2.6f && !resultTextSource.gameObject.activeInHierarchy)
             {
                 resultTextSource.gameObject.SetActive(true);
-                TextAnimation(resultTextSource, 0.5f); 
+                TextAnimation(resultTextSource, 0.5f);
             }
         }
         if (audioSource.time > audioSource.clip.length - 0.1f) ChangeAudio();

@@ -102,8 +102,8 @@ TextureImporter:
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    compressionQuality: 75
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -114,8 +114,8 @@ TextureImporter:
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    compressionQuality: 75
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -138,8 +138,8 @@ TextureImporter:
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
+    compressionQuality: 75
+    crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
@@ -193,13 +193,13 @@ TextureImporter:
       name: Hey UI_2
       rect:
         serializedVersion: 2
-        x: 77
-        y: 10
-        width: 136
-        height: 136
+        x: 74
+        y: 6
+        width: 142
+        height: 142
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 68, y: 68, z: 68, w: 68}
+      border: {x: 70, y: 70, z: 70, w: 70}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -345,7 +345,7 @@ TextureImporter:
         width: 41
         height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
