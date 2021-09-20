@@ -582,7 +582,6 @@ GameObject:
   - component: {fileID: 178775062}
   - component: {fileID: 178775060}
   - component: {fileID: 178775061}
-  - component: {fileID: 178775063}
   m_Layer: 5
   m_Name: -Background-
   m_TagString: Untagged
@@ -625,17 +624,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoPlayer: {fileID: 1302585172}
-  audioSource: {fileID: 178775063}
-  videoClip: {fileID: 32900000, guid: abae1293ba2cb8546b32dc3defc52ea2, type: 3}
-  blurVideo: {fileID: 32900000, guid: 1cc7d54945dedea4c92f758a81326845, type: 3}
-  endOffset: 1.25
-  _videoClip: {fileID: 32900000, guid: 2fd7423aada2d5e4f9186b12e0adb374, type: 3}
-  _endOffset: 2
+  audioSource: {fileID: 1302585173}
+  backgroundVideoClip: {fileID: 32900000, guid: abae1293ba2cb8546b32dc3defc52ea2,
+    type: 3}
+  resultVideoClip: {fileID: 32900000, guid: 2fd7423aada2d5e4f9186b12e0adb374, type: 3}
   audioClips:
   - {fileID: 8300000, guid: fb05b84b68001044ea306505688c4f9d, type: 3}
   - {fileID: 8300000, guid: c2787a641fff2a545a9cdda5348c6cc0, type: 3}
   - {fileID: 8300000, guid: b7df13552364f354dbce8bb674fd8bed, type: 3}
   - {fileID: 8300000, guid: 7b747514b5e0a6d4abaebc41b2e99d8d, type: 3}
+  gameUI: {fileID: 554600198}
+  playButton: {fileID: 430313975}
+  gameHelper: {fileID: 764953659}
+  doorsScrollRect: {fileID: 633636887}
   resultTextSource: {fileID: 335959338}
   stepsTextSource: {fileID: 1184715111}
   audioTextSource: {fileID: 2062116978}
@@ -645,8 +646,6 @@ MonoBehaviour:
   - {fileID: 2062116976}
   - {fileID: 1541058090}
   - {fileID: 1056919984}
-  gameUI: {fileID: 554600198}
-  playButton: {fileID: 430313975}
 --- !u!114 &178775061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -685,102 +684,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 178775058}
   m_CullTransparentMesh: 0
---- !u!82 &178775063
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 178775058}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &183205183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,7 +1732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
-  m_VerticalFit: 1
+  m_VerticalFit: 2
 --- !u!114 &443274537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2047,15 +1950,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorPrefab: {fileID: 890336948}
   doorsGrid: {fileID: 443274534}
+  doorsCount: 100
   result: 
-  doorsCount: 99
-  values: []
-  steps: []
-  background: {fileID: 178775060}
-  gameHelper: {fileID: 764953659}
   gameResults: {fileID: 1709281644}
   prevStepButon: {fileID: 773066149}
   nextStepButton: {fileID: 14267184}
+  stepsTextSource: {fileID: 1184715111}
+  values: []
+  steps: []
 --- !u!1 &566785429
 GameObject:
   m_ObjectHideFlags: 0
@@ -3373,9 +3275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equationTextSource: {fileID: 1604001433}
   equalsTextSource: {fileID: 608602737}
-  doorsScrollRect: {fileID: 633636887}
-  panelMinMax_Pos: {x: -183.6, y: 960}
-  animationDuration: 5
+  animator: {fileID: 764953660}
 --- !u!95 &764953660
 Animator:
   serializedVersion: 3
@@ -3386,7 +3286,7 @@ Animator:
   m_GameObject: {fileID: 764953655}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 18ff20e1309e23a45974bb71a5cf4ac7, type: 2}
+  m_Controller: {fileID: 9100000, guid: faf2eac2c6554d64b94b2ba9774eadef, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4468,7 +4368,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: ' https://www.instagram.com/jahn_star/'
+          m_StringArgument: ' https://instagram.com/jahn_star/'
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1056919987
@@ -4923,12 +4823,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 764953659}
         m_TargetAssemblyTypeName: Helper, Assembly-CSharp
-        m_MethodName: HelperDisplay
-        m_Mode: 1
+        m_MethodName: ExpandCalculator
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: -1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -5310,6 +5210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1302585171}
   - component: {fileID: 1302585172}
+  - component: {fileID: 1302585173}
   m_Layer: 5
   m_Name: VideoPlayer
   m_TagString: Untagged
@@ -5369,6 +5270,102 @@ VideoPlayer:
   m_WaitForFirstFrame: 0
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
+--- !u!82 &1302585173
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302585170}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.9
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1308145145
 GameObject:
   m_ObjectHideFlags: 0
@@ -8030,8 +8027,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 764953659}
-        m_TargetAssemblyTypeName: Helper, Assembly-CSharp
+      - m_Target: {fileID: 178775060}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: Scroll
         m_Mode: 2
         m_Arguments:

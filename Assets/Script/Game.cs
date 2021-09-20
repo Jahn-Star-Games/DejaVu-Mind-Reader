@@ -8,39 +8,88 @@ public class Game : MonoBehaviour
     [Header("Resources")]
     public GameObject doorPrefab;
     public Transform doorsGrid;
+    public int doorsCount = 100;
     [HideInInspector]
     public string result;
-    [Header("Input")]
-    public int doorsCount = 99;
+
+    [Header("GUI")]
+    public GameObject gameResults;
+    public GameObject prevStepButon, nextStepButton;
+    public Text stepsTextSource;
+    private GameManager background;
     [Header("Output"), Tooltip("Pick a number")]
     public List<float> values;
     public List<string> steps;
-    [Header("GUI")]
-    public GameManager background;
-    public Helper gameHelper;
-    public GameObject gameResults, prevStepButon, nextStepButton;
-    private Text stepsTextSource;
     private int currentStep;
     private bool createDoors;
     private int multiply, add, divide, subtract, _redivide;
-    void Start()
+    private void Awake()
     {
-        createDoors = true;
-        gameResults.SetActive(false);
-        prevStepButon.SetActive(false);
-        nextStepButton.SetActive(true);
-        stepsTextSource = GameManager.Instance.stepsTextSource;
+        CreateDoor(doorsCount);
+        background = GameManager.Instance;
     }
     private void OnEnable()
     {
-        createDoors = true;
         gameResults.SetActive(false);
         prevStepButon.SetActive(false);
         nextStepButton.SetActive(true);
+        //
+        createDoors = true;
         currentStep = 0;
-        gameHelper.PressKey("C");
+        background.gameHelper.PressKey("C");
     }
-    void Update()
+    public void CreateDoor(int value)
+    {
+        foreach (Transform door in doorsGrid) Destroy(door.gameObject);
+        if (value > 0)
+            for (int i = 0; i < value; i++)
+                Instantiate(doorPrefab, doorsGrid.transform).transform.GetChild(0).GetComponent<Text>().text = i.ToString("00");
+    }
+    public void NextStep(bool next)
+    {
+        if (next)
+        {
+            if (currentStep + 1 < steps.Count)
+            {
+                currentStep++;
+                stepsTextSource.text = steps[currentStep];
+                GameManager.TextAnimation(stepsTextSource, 1.5f);
+                nextStepButton.SetActive(true);
+                prevStepButon.SetActive(true);
+                if (currentStep + 1 >= steps.Count) 
+                {
+                    nextStepButton.SetActive(false);
+                    gameResults.SetActive(true);
+                    background.gameHelper.ExpandCalculator(0);
+                    // Scroll to Bottom doorsScrollRect
+                    background.scroll = background.scrollTarget = 0;
+                    background.doorsScrollRect.normalizedPosition = new Vector2(0, 0);
+                    background.Scroll(null);
+                }
+            }
+        }
+        else if (currentStep - 1 >= 0)
+        {
+            currentStep--;
+            stepsTextSource.text = steps[currentStep];
+            GameManager.TextAnimation(stepsTextSource, 1.5f);
+            prevStepButon.SetActive(true);
+            nextStepButton.SetActive(true);
+
+            if (currentStep - 1 < 0) prevStepButon.SetActive(false);
+        }
+    }
+    public void AklimdakiniBul(Text door)
+    {
+        int doorNumber = int.Parse(door.text);
+        background.ShowResults((int)Reverse((float)doorNumber) + "");
+    }
+    private float Reverse(float value) 
+    {
+        // than => ((((value * 2) * multiply) + add) / divide) - subtract;
+        return ((((value + subtract) * divide) - add) / multiply) / 2;
+    }
+    private void Update()
     {
         try
         {
@@ -50,29 +99,29 @@ public class Game : MonoBehaviour
                 do
                 {
                     multiply = Random.Range(1, 15);
-                        multiply += multiply % 2 != 0 ? 1 : 0;
+                    multiply += multiply % 2 != 0 ? 1 : 0;
                     add = Random.Range(1, 100);
-                        add += add % 2 != 0 ? 1 : 0;
+                    add += add % 2 != 0 ? 1 : 0;
                     divide = Random.Range(1, 10);
-                        divide += divide % 2 != 0 ? 1 : 0;
+                    divide += divide % 2 != 0 ? 1 : 0;
                     subtract = Random.Range(1, 75);
-                        subtract += subtract % 2 != 0 ? 1 : 0;
+                    subtract += subtract % 2 != 0 ? 1 : 0;
 
                     _redivide = Random.Range(1, 15);
                     _redivide += _redivide % 2 != 0 ? 1 : 0;
 
                     firstValue = (int)Reverse(0);
-                    lastValue = (int)Reverse(doorsCount);
+                    lastValue = (int)Reverse(doorsCount-1);
                     test = (int)Reverse(((((lastValue * 2 * _redivide) / ((_redivide * 2) / (multiply * 2) > 1 ? (_redivide * 2) / (multiply * 2) : 1)) + add) / divide) - subtract);
                 }
-                while ((_redivide * 2) / (multiply * 2) == 0 || firstValue < 0 || lastValue > doorsCount || divide < 1 || test != lastValue);
+                while ((_redivide * 2) / (multiply * 2) == 0 || firstValue < 0 || lastValue > (doorsCount - 1) || divide < 1 || test != lastValue);
 
                 result = "";
                 values.Clear();
 
                 int prevValue = 0;
                 bool notConsecutive = false;
-                for (int i = 0; i <= doorsCount; i++)
+                for (int i = 0; i <= (doorsCount-1); i++)
                 {
                     if (prevValue != (int)Reverse(i) && prevValue + 1 != (int)Reverse(i)) notConsecutive = true;
                     prevValue = (int)Reverse(i);
@@ -97,61 +146,9 @@ public class Game : MonoBehaviour
                     steps.Add("Sonucun tam sayı ise aynı numaralı kapıyı aç, ve ilk tuttuğun sayı seni karşılayacak...");
 
                     stepsTextSource.text = steps[0];
-                    CreateDoor();
                 }
             }
         }
         catch { Application.Quit(); }
-    }
-    public void NextStep(bool next)
-    {
-        if (next)
-        {
-            if (currentStep + 1 < steps.Count)
-            {
-                currentStep++;
-                stepsTextSource.text = steps[currentStep];
-                GameManager.TextAnimation(stepsTextSource, 1.5f);
-                nextStepButton.SetActive(true);
-                prevStepButon.SetActive(true);
-                if (currentStep + 1 >= steps.Count) 
-                {
-                    nextStepButton.SetActive(false);
-                    gameHelper.changeMode = gameHelper.calculator = true;
-                    gameResults.SetActive(true);
-                    //
-                    gameHelper.doorsScrollRect.normalizedPosition = new Vector2(0, 0);
-                    gameHelper.Scroll(null);
-                }
-            }
-        }
-        else if (currentStep - 1 >= 0)
-        {
-            currentStep--;
-            stepsTextSource.text = steps[currentStep];
-            GameManager.TextAnimation(stepsTextSource, 1.5f);
-            prevStepButon.SetActive(true);
-            nextStepButton.SetActive(true);
-
-            if (currentStep - 1 < 0) prevStepButon.SetActive(false);
-        }
-    }
-    public void CreateDoor()
-    {
-        GameManager.TextAnimation(stepsTextSource, 1f);
-        foreach (Transform door in doorsGrid) Destroy(door.gameObject);
-        if (values.Count > 0)
-            for (int i = 0; i < values.Count; i++)
-                Instantiate(doorPrefab, doorsGrid.transform).transform.GetChild(0).GetComponent<Text>().text = i.ToString("00");
-    }
-    public void AklimdakiniBul(Text door)
-    {
-        int doorNumber = int.Parse(door.text);
-        background.ShowResults((int)Reverse((float)doorNumber) + "");
-    }
-    private float Reverse(float value) 
-    {
-        // than => ((((value * 2) * multiply) + add) / divide) - subtract;
-        return ((((value + subtract) * divide) - add) / multiply) / 2;
     }
 }

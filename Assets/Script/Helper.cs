@@ -5,72 +5,25 @@ using UnityEngine.UI;
 
 public class Helper : MonoBehaviour
 {
-    [Header("GUI")]
+    [Header("Calculator")]
     public Text equationTextSource;
     public Text equalsTextSource;
-    public ScrollRect doorsScrollRect;
-    [Header("Panel Animation")]
-    public Vector2 panelMinMax_Pos; // -183.6, 582
-    public float animationDuration = 5;
-    private float animTime, time_normalized;
-    private RectTransform rectTransform;
-    internal bool calculator = false, changeMode;
+    [Header("Animation")]
+    public Animator animator;
+    private static string split = ":";
+    private bool expand = false;
     private string output, _firstNumber, _operator, _secondNumber;
     private double _equals;
-    private static string split = ":";
-    internal float scroll, scrollTarget;
     private void OnEnable()
     {
-        rectTransform = GetComponent<RectTransform>();
-        //
         output = _firstNumber = _operator = _secondNumber = "";
         _equals = 0;
     }
-    void Update()
+    public void ExpandCalculator(int value = -1)
     {
-        if (changeMode && calculator)
-        {
-            animTime += Time.deltaTime;
-            time_normalized = animTime / animationDuration;
-            rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition, new Vector2(0, panelMinMax_Pos.x), time_normalized);
-            if (rectTransform.anchoredPosition.y - panelMinMax_Pos.x < 0.25f) changeMode = false;
-        }
-        else if (changeMode)
-        {
-            animTime += Time.deltaTime;
-            time_normalized = animTime / animationDuration;
-            rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition, new Vector2(0, panelMinMax_Pos.y), time_normalized);
-            if (panelMinMax_Pos.y - rectTransform.anchoredPosition.y < 0.25f) changeMode = false;
-        }
-        //
-        if (scroll != scrollTarget)
-        {
-            if (scroll > scrollTarget)
-            {
-                scroll -= Time.deltaTime * 0.8f;
-                if (scroll < scrollTarget) scroll = scrollTarget;
-            }
-            else
-            {
-                scroll += Time.deltaTime * 0.4f;
-                if (scroll > scrollTarget) scroll = scrollTarget;
-            }
-            doorsScrollRect.normalizedPosition = new Vector2(0, scroll);
-        }
+        expand = value == -1 ? !expand : value <= 0 ? false : true;
+        animator.SetBool("expand", expand);
     }
-    public void HelperDisplay()
-    {
-        calculator = !calculator;
-        changeMode = true;
-        animTime = 0;
-    }
-    public void Scroll(RectTransform scrollButton)
-    {
-        if (scrollButton) scrollButton.eulerAngles = new Vector3(scrollButton.eulerAngles.x, scrollButton.eulerAngles.y, scrollButton.eulerAngles.z + 180);
-        scroll = doorsScrollRect.normalizedPosition.y;
-        scrollTarget = scrollTarget == 0 ? 1 : 0;
-    }
-    // Calculator
     public void PressKey(string character)
     {
         if (character == "C") output = ""; // clean
