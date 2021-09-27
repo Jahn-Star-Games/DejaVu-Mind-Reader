@@ -7,9 +7,9 @@ Relax with sci-fi ambience and share this experience with your friends!
 DejaVu Zihin Okuyucu Pro, "aklınızı okumak" için matematiği kullanan, reklamsız, açık kaynaklı bir oyundur.
 Oyunun sihirli editörü, size bir takım matematiksel işlemler yaptıracak ve zihninizdeki sayıyı otomatik olarak okuyacaktır.
 Bilim kurgu ortamıyla rahatlayın ve bu deneyimi arkadaşlarınızla paylaşın!
-<br>
+<br><br>
 <b> Developed by Halil Emre Yildiz </b>
-<br>
+<br><br>
 MIT License
 
 Copyright (c) 2021 Jahn Star Games
