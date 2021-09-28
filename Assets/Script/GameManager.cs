@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
         playButton.SetActive(false);
         gameUI.SetActive(true);
         gameHelper.ExpandCalculator(1);
+        SettingsDisplay("false");
     }
     public void ShowResults(string yourNumber)
     {
@@ -144,6 +145,7 @@ public class GameManager : MonoBehaviour
         videoPlayer.clip = resultVideoClip;
         resultTextSource.text = yourNumber;
     }
+    private bool firstGame;
     private void Update()
     {
         if (showResult)
@@ -155,7 +157,11 @@ public class GameManager : MonoBehaviour
                 //
                 videoPlayer.clip = backgroundVideoClip;
                 videoPlayer.Play();
-                SettingsDisplay("true");
+                if (!firstGame)
+                {
+                    SettingsDisplay("true");
+                    firstGame = true;
+                }
                 Restart();
             }
             else if (videoPlayer.time >= 2.6f && !resultTextSource.gameObject.activeInHierarchy)
